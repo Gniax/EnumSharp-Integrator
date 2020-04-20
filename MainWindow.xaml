@@ -5,8 +5,63 @@
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         xmlns:local="clr-namespace:EnumSharpIntegrator"
         mc:Ignorable="d"
-        Title="MainWindow" Height="450" Width="800">
+        Title="EnumSharpIntegrator" Height="450" Width="600">
     <Grid>
-        
+        <Grid.RowDefinitions>
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.2*" />
+            <RowDefinition Height="0.2*" />
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="0.25*" />
+            <ColumnDefinition Width="0.5*" />
+            <ColumnDefinition Width="0.25*" />
+        </Grid.ColumnDefinitions>
+
+        <StackPanel Grid.Row="1" Grid.Column="1" Margin="20">
+            <TextBlock Text="Target file:" FontWeight="DemiBold"/>
+            <DockPanel>
+                <TextBox x:Name="TxtTargetPath" Width="200" />
+                <Button Content="..." Margin="4 0 0 0" Click="BtnTargetPath_Click" />
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="2" Grid.Column="1" Margin="20">
+            <TextBlock Text="Integrated file:" FontWeight="DemiBold"/>
+            <DockPanel>
+                <TextBox x:Name="TxtFilePath" Width="200" />
+                <Button Content="..." Margin="4 0 0 0" Click="BtnFilePath_Click" />
+            </DockPanel>
+        </StackPanel>
+
+        <StackPanel Grid.Row="3" Grid.Column="1" Margin="20" VerticalAlignment="Center">
+            <Button x:Name="MergeBtn" 
+                    Background="BlueViolet" 
+                    Foreground="White" 
+                    FontWeight="Bold" 
+                    Content="MERGE" 
+                    Margin="4 0 0 0" 
+                    BorderBrush="Black"
+                    BorderThickness="2"
+                    Click="BtnMerge_OnClick" />
+        </StackPanel>
+
+        <StackPanel x:Name="spAlert" 
+                    Grid.Row="4"
+                    Grid.Column="1"
+                    Background="#cd5d5d" 
+                    Visibility="Hidden" 
+                    Width="300" 
+                    Height="45">
+            <TextBlock x:Name="tbAlert"
+                       FontWeight="Bold"
+                       FontSize="15"
+                       TextWrapping="Wrap"
+                       VerticalAlignment="Center"
+                       Foreground="White"
+                       Margin="10 8 10 10" HorizontalAlignment="Center"/>
+        </StackPanel>
     </Grid>
 </Window>
