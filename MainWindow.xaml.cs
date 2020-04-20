@@ -16,6 +16,7 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Windows.Threading;
 
 namespace EnumSharpIntegrator
 {
@@ -75,6 +76,7 @@ namespace EnumSharpIntegrator
             {
                 if (File.Exists(targetFile) && File.Exists(TxtFilePath.Text))
                 {
+                    ProgressBar.Value = 0;
                     // We store the target enum content to a dictionnary then separate the header and the footer
                     Dictionary<int, string> targetContent = new Dictionary<int, string>();
                     List<string> header = new List<string>();
@@ -102,25 +104,33 @@ namespace EnumSharpIntegrator
                         }
                         else if (readerIndex == 1) // If we do not detect enum format anymore, we're in the footer so we indicates where we are
                         {
+                            UpdateProgressBar(15);
                             readerIndex++;
                         }
 
                         // Then we are differents lines thanks to readerIndex
                         if (readerIndex == 0)
+                        {
                             header.Add(line);
+                        }
                         else if (readerIndex == 2)
+                        {
                             footer.Add(line);
+                        }
                     }
                     if (targetContent.Count < 1) 
                     {
                         tbAlert.Text = "Error: target file content is empty or format is not recognized !";
+                        ProgressBar.Value = 0;
                         spAlert.Visibility = Visibility.Visible;
+                        ProgressBar.Visibility = Visibility.Hidden;
                         Semaphore.Release();
                     }
 
                     // We also do the same with the file to integrate, however we don't need to use it's content
                     Dictionary<int, string> integrateContent = new Dictionary<int, string>();
-                    
+                    UpdateProgressBar(30);
+
                     foreach (string line in File.ReadAllLines(integratedFile))
                     {
                         if (Regex.Match(line, @".*\s=\s[0-9][0-9]*").Success)
@@ -134,7 +144,9 @@ namespace EnumSharpIntegrator
                     if (integrateContent.Count < 1)
                     {
                         tbAlert.Text = "Error: integrated file is empty or format is not recognized ! Format: XXXXX = int,";
+                        ProgressBar.Value = 0;
                         spAlert.Visibility = Visibility.Visible;
+                        ProgressBar.Visibility = Visibility.Hidden;
                         Semaphore.Release();
                         return;
                     }
@@ -151,6 +163,7 @@ namespace EnumSharpIntegrator
 
                     List<string> newFile = new List<string>();
                     newFile.AddRange(header);
+                    UpdateProgressBar(50);
 
                     foreach (var kvp in sortedCollection)
                     {
@@ -164,6 +177,7 @@ namespace EnumSharpIntegrator
                     newFile.AddRange(footer);
 
                     // Then we write the newFile content into the target one
+                    UpdateProgressBar(75);
 
                     using (StreamWriter newTask = new StreamWriter(targetFile, false))
                     {
@@ -173,7 +187,10 @@ namespace EnumSharpIntegrator
                         }
                     }
 
+                    UpdateProgressBar(100);
                     MessageBox.Show("Success : " + integrateContent.Count + " values added/updated");
+                    spAlert.Visibility = Visibility.Hidden;
+                    ProgressBar.Value = 0;
                     Semaphore.Release();
                     return;
                 }
@@ -181,8 +198,13 @@ namespace EnumSharpIntegrator
 
             tbAlert.Text = "Error: required files are not valid !";
             spAlert.Visibility = Visibility.Visible;
-
+            ProgressBar.Value = 0;
             Semaphore.Release();
+        }
+
+        private void UpdateProgressBar(int value)
+        {
+            ProgressBar.Dispatcher.Invoke(() => ProgressBar.Value = value, DispatcherPriority.Background);
         }
     }
 }

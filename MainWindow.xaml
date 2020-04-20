@@ -63,5 +63,15 @@
                        Foreground="White"
                        Margin="10 8 10 10" HorizontalAlignment="Center"/>
         </StackPanel>
+        <ProgressBar x:Name="ProgressBar" 
+                     Maximum="100"
+                     BorderThickness="2" 
+                     Grid.Column="1" 
+                     HorizontalAlignment="Left" 
+                     Height="10" 
+                     Margin="66,64,0,0" 
+                     Grid.Row="3" 
+                     VerticalAlignment="Top" 
+                     Width="169"/>
     </Grid>
 </Window>
